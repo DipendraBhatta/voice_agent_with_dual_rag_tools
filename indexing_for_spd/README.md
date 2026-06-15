@@ -250,11 +250,14 @@ cp .env.template .env
 Edit `.env`:
 
 ```env
-# Groq — LLM inference
-GROQ_API_KEY=your_groq_api_key_here
+# ── Groq ────────────────────────────────────────────────────────────
+GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GROQ_LLM_MODEL=llama-3.3-70b-versatile
 
-# OpenRouter — evaluation LLM (Claude 3 Haiku)
-OPENROUTER_API_KEY=your_openrouter_api_key_here
+# ── Gemini ──────────────────────────────────────────────────────────
+GEMINI_API_KEY=AIzaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+MODEL=gemini-2.5-flash
+
 ```
 
 ---
