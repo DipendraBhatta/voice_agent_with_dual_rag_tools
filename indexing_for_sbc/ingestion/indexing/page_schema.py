@@ -1,6 +1,5 @@
 # page_schema.py
 
-
 from typing import List, Optional, TypedDict, Dict, Any
 
 class TableData(TypedDict):

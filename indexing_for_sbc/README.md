@@ -1,11 +1,11 @@
-# 📄 PageIndexing RAG — Insurance & SPD Document QA
+# 📄 PageIndexing RAG — Insurance & SBC Document QA
 
 <p align="center">
   <img src="assets/indexngimage.png" alt="Vectorless RAG with PageIndex" width="780"/>
 </p>
 
 <p align="center">
-  <strong>Vectorless RAG for insurance & SPD documents — no embeddings, no vector DB, just a tree.</strong>
+  <strong>Vectorless RAG for insurance & SBC documents — no embeddings, no vector DB, just a tree.</strong>
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
 
 ## 🧠 Why This Project?
 
-Insurance and SPD documents are notoriously hard to query:
+Insurance and SBC documents are notoriously hard to query:
 
 - They have **no consistent TOC** or heading structure
 - Content is **spread across pages** with implicit relationships
@@ -57,7 +57,7 @@ This project solves those problems by:
 ### How It Works
 
 ```
-PDF / SPD Document
+PDF / SBC Document
        │
        ▼
 ┌─────────────────────┐
@@ -196,7 +196,7 @@ Every query ends with a full cost report: tokens in/out, USD cost, and latency f
 ## 📁 Project Structure
 
 ```
-PageIndexingWithoutTOC/
+indexing_for_sbc/
 │
 ├── assets/                               # README images
 │   ├── pageindex_diagram.png             # Architecture overview diagram
