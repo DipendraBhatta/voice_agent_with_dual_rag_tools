@@ -1,0 +1,39 @@
+# LangChain and Core Agent Framework
+langchain-core>=0.2.0
+langgraph>=0.1.0
+
+# LLM Providers (No OpenAI)
+langchain-google-genai>=1.0.0
+langchain-groq>=0.1.0
+
+# Environment and Configuration
+python-dotenv>=1.0.0
+
+# Parsing and Document Processing (for your RAG Pipeline)
+beautifulsoup4>=4.12.0
+pymupdf>=1.24.0
+
+# Utilities
+requests>=2.31.0
+pydantic>=2.0.0
+
+
+# Speech-to-Text
+faster-whisper
+
+# Audio Recording
+sounddevice
+scipy
+numpy
+
+# Audio Playback
+playsound==1.2.2
+
+# Optional Audio Utilities
+soundfile
+
+# Environment Variables
+python-dotenv
+
+# Logging
+loguru

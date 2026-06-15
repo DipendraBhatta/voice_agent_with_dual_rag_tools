@@ -1,0 +1,79 @@
+# =========================
+# Global ignores
+# =========================
+.env
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+*.log
+logs/
+chat_history/
+data/
+ingestion/
+query_retrieval/
+pipeline_execution.log
+*.swp
+*.tar.gz
+*.ort
+
+# =========================
+# Agent
+# =========================
+agent/__pycache__/
+agent/tool_summaries_cache.json
+
+# =========================
+# --- Subproject: indexing_for_sbc ---
+# =========================
+indexing_for_sbc/ingestion_results/
+!indexing_for_sbc/ingestion_results/local_level_health_ppo_health_plan_sbc/
+!indexing_for_sbc/ingestion_results/local_level_health_ppo_health_plan_sbc/indexing_results/
+!indexing_for_sbc/ingestion_results/local_level_health_ppo_health_plan_sbc/indexing_results/Final_Indexing.json
+
+# =========================
+# --- Subproject: indexing_for_spd ---
+# =========================
+indexing_for_spd/ingestion_results/
+!indexing_for_spd/ingestion_results/local_level_health_ppo_health_plan_spd (1)/
+!indexing_for_spd/ingestion_results/local_level_health_ppo_health_plan_spd (1)/indexing_results/
+!indexing_for_spd/ingestion_results/local_level_health_ppo_health_plan_spd (1)/indexing_results/master_indexing.json
+indexing_for_spd/COST_PERFORMANCE.txt
+indexing_for_spd/query_retrieval/
+indexing_for_spd/ingestion/
+indexing_for_spd/COST_PERFORMANCE.txt
+
+# =========================
+# --- Voice Interface ---
+# =========================
+voice_interface/.env
+voice_interface/__pycache__/
+voice_interface/*.log
+voice_interface/logs/
+voice_interface/chat_history/
+voice_interface/pipeline_execution.log
+voice_interface/input.wav
+voice_interface/output.wav
+voice_interface/models/
+voice_interface/*.onnx
+voice_interface/*.onnx.json
+
+# =========================
+# --- Piper Libraries ---
+# =========================
+#piper
+piper_libs/
+piper_linux_x86_64.tar.gz
+
+
+# =========================
+# Subproject-specific .gitignore files
+# =========================
+indexing_for_sbc/.gitignore
+indexing_for_spd/.gitignore
+piper/
+piper/
+piper/
