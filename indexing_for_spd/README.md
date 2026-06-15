@@ -151,7 +151,7 @@ Each node schema:
 ## 📁 Project Structure
 
 ```
-PageIndexingWithoutTOC/
+page_indexing_for_spd/
 │
 ├── ingestion/                              # Document ingestion pipeline
 │   ├── indexing/

@@ -11,7 +11,6 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from groq import Groq
-
 from query_retrieval.cost_estimation import CostTracker
 import ingestion.config as cfg
 
@@ -24,7 +23,6 @@ class RootNodeSummaryGenerator:
     Surgically extracts structural markers and summarized topics to create 
     a high-precision routing map for the document's Root Node.
     """
-
     def __init__(self, structured_json_path: str):
         self.json_path = Path(structured_json_path)
 
@@ -36,8 +34,6 @@ class RootNodeSummaryGenerator:
         clean_model = GROQ_MODEL.replace("groq/", "").strip()
         self.llm = ChatGroq(api_key=GROQ_API_KEY, model_name=clean_model, temperature=0)
   
-
-
         with open(self.json_path, 'r', encoding='utf-8') as f:
             self.nodes = json.load(f)
             
@@ -81,7 +77,6 @@ class RootNodeSummaryGenerator:
                 header_tags = soup.find_all(['h1', 'h2', 'h3', 'h4', 'strong', 'b', 'th'])
                 headers = [h.get_text(strip=True) for h in header_tags if len(h.get_text(strip=True)) > 3]
 
-
                 ## 2. Collect Paragraphs (Trimmed if > 100 chars: 1st sentence + 4 random)
                 import random
                 # 2. Collect Paragraphs (Logic: First 2  for paragraphs > 20 chars)
@@ -100,8 +95,6 @@ class RootNodeSummaryGenerator:
                     })
                     
         return page_map
-
-
 
     def collect_table_summaries(self,summary_folder_path: str):
         """
@@ -137,7 +130,6 @@ class RootNodeSummaryGenerator:
 
         return table_map
 
-
     def collect_multi_table_topics(self, extracted_text_folder: str):
         """
         Parses summaries to extract ONLY the topic titles, 
@@ -166,7 +158,6 @@ class RootNodeSummaryGenerator:
                     for line in lines:
                         line = line.strip()
                         
-                      
                         # Skip if line is empty OR contains "Summary:" OR "PAGE_LEVEL_SUMMARY:"
                         if not line or "Summary:" in line or "PAGE_LEVEL_SUMMARY:" in line:
                             continue
@@ -186,7 +177,6 @@ class RootNodeSummaryGenerator:
                     pass
                     
         return results
-
 
     def generate_master_page_map(self,html_map, table_map, multi_table_map):
         master_map = []
@@ -224,8 +214,6 @@ class RootNodeSummaryGenerator:
             master_map.append(entry)
             
         return master_map
-
-
 
     def generate_topic_centric_index(self, final_master_map: list):
         """
@@ -321,7 +309,6 @@ class RootNodeSummaryGenerator:
         Data:
         {chr(10).join(context_bits)}
         """
-
         try:
             self.logger.info("Calling Groq for Root Summary...")
             start_time = time.time()

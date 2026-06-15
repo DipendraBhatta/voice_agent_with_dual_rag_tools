@@ -24,7 +24,7 @@ def record_audio(
         sd.wait()  # Complete hardware blocking execution loop securely
         write(filename, sample_rate, recording)
     except Exception as e:
-        print(f"❌ Microphone capture issue: {e}")
+        print(f" Microphone capture issue: {e}")
         # Build empty fall-back file configuration to avoid crashing lower execution trees
         write(filename, sample_rate, [[0]] * int(duration * sample_rate))
 

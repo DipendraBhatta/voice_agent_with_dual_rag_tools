@@ -1,3 +1,4 @@
+# semantic_page_extractor.py
 import sys
 import re
 import json

@@ -1,3 +1,4 @@
+# indexing_aggregator.py
 import json
 import logging
 import sys

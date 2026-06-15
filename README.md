@@ -196,7 +196,6 @@ VOICE AGENT WITH DUAL RAG TOOLS/
 │
 ├── .env                               # API keys — see template below (not committed)
 ├── .gitignore
-├── piper                              # Piper TTS binary (Linux x86_64)
 ├── process.log                        # Query trace log
 ├── README.md
 └── requirements.txt
