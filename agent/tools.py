@@ -38,11 +38,16 @@ def _get_spd_runner() -> RetrievalAgentRunner_SPD:
     return _spd_runner
 
 
+# ==================== UPDATED DOCSTRINGS ====================
 @tool
 def search_sbc(query: str) -> str:
     """Search the Summary of Benefits and Coverage (SBC) document.
-    Best for: coverage summaries, deductibles, copays, out-of-pocket maximums,
-    what is covered or not covered, cost sharing details.
+    
+    Best for: deductibles, copays, coinsurance, out-of-pocket maximums, 
+    cost sharing, what is covered or not covered, benefit amounts, 
+    and coverage summaries.
+    
+    This is the primary tool for any cost or coverage level questions.
     """
     try:
         # ── Print Step 1 + Step 2 BEFORE RAG runs ────────────
@@ -64,8 +69,12 @@ def search_sbc(query: str) -> str:
 @tool
 def search_spd(query: str) -> str:
     """Search the Summary Plan Description (SPD) document.
-    Best for: detailed plan rules, eligibility, exclusions, definitions,
-    procedures, appeals, COBRA, HIPAA, legal provisions.
+    
+    Best for: detailed plan rules, eligibility, enrollment, exclusions, 
+    definitions, appeals, COBRA, HIPAA, legal provisions, and administration.
+    
+    Do NOT use this tool for questions about deductibles, copays, 
+    coinsurance, out-of-pocket maximums or cost sharing.
     """
     try:
         # ── Print Step 1 + Step 2 BEFORE RAG runs ────────────
@@ -82,6 +91,7 @@ def search_spd(query: str) -> str:
         return f"SPD index not found. Run ingestion first. Details: {str(e)}"
     except Exception as e:
         return f"SPD Search Error: {str(e)}"
+# ==========================================================
 
 
 tools = [search_sbc, search_spd]

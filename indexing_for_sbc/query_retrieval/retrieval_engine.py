@@ -16,18 +16,21 @@ from query_retrieval.pretty_query import ColorSetup, _header, _hr, display_welco
 
 load_dotenv()
 
-def setup_logger(name: str = "ExplainableRAG") -> logging.Logger:
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
-    if not logger.handlers:
-        fmt = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        ch = logging.StreamHandler()
-        ch.setFormatter(fmt)
-        fh = logging.FileHandler("process.log", encoding="utf-8")
-        fh.setFormatter(fmt)
-        logger.addHandler(ch)
-        logger.addHandler(fh)
-    return logger
+# def setup_logger(name: str = "ExplainableRAG") -> logging.Logger:
+#     logger = logging.getLogger(name)
+#     logger.setLevel(logging.WARNING)
+#     if not logger.handlers:
+#         fmt = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+#         ch = logging.StreamHandler()
+#         ch.setFormatter(fmt)
+#         fh = logging.FileHandler("process.log", encoding="utf-8")
+#         fh.setFormatter(fmt)
+#         logger.addHandler(ch)
+#         logger.addHandler(fh)
+#     return logger
+
+# Suppress all logging output
+logging.disable(logging.CRITICAL)
 
 def _strip_fences(text: str) -> str:
     text = text.strip()
@@ -60,7 +63,7 @@ class ExplainableTreeRAG:
     ):
         with open(index_path, "r", encoding="utf-8") as f:
          self.data = json.load(f)
-        self.logger = setup_logger()
+        # self.logger = setup_logger()
         self.client = Groq(api_key=os.getenv(groq_api_key_env))
         self.model = os.getenv(llm_model_env)
         self.trace: List[str] = []
@@ -73,7 +76,6 @@ class ExplainableTreeRAG:
         self.traversal_steps: List[Dict] = []
         self.domain_summary = None
         
-     
         display_welcome_info(self)
 
         ExplainableTreeRAG.pretty_query = pretty_query  
@@ -129,7 +131,7 @@ class ExplainableTreeRAG:
 
     def log(self, message: str) -> None:
         self.trace.append(f"{time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())} - {message}")
-        self.logger.info(message)
+        # self.logger.info(message)
 
     def tracked_llm_call(self, step: str, messages: List[Dict], **kwargs):
         """Wrapper that tracks cost + time for every Groq call."""
@@ -177,7 +179,6 @@ class ExplainableTreeRAG:
             
             self.domain_summary = summary
             
-           
             self._save_to_metadata({
                 "domain_summary": summary,
                 "total_sections": len(self._title_tree.splitlines()),
@@ -186,7 +187,7 @@ class ExplainableTreeRAG:
                 "last_updated": datetime.now().isoformat()
             })
             
-            self.logger.info(f"Domain summary saved: {summary}")
+            # self.logger.info(f"Domain summary saved: {summary}")
             return summary
 
         except Exception as e:
@@ -859,6 +860,3 @@ class ExplainableTreeRAG:
             "classification_reason": getattr(self, 'last_classification_reason', None),
             "planning_reason": getattr(self, 'last_planning_reason', None)
         }
-        
-
-  

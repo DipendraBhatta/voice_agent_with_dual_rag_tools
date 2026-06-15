@@ -64,7 +64,7 @@ class CostTracker:
         self.calls.append(record)
         
         # This is useful for debugging, but can be commented out in production
-        print(f" TRACKED → {step:28} | {model:25} | ${cost:.6f} | {duration_seconds:.3f}s")
+        # print(f" TRACKED → {step:28} | {model:25} | ${cost:.6f} | {duration_seconds:.3f}s")
     
     def get_report(self, as_json: bool = False) -> Dict:
         """Generate a comprehensive cost and timing report."""
@@ -79,28 +79,27 @@ class CostTracker:
         total_input_tokens = sum(call.input_tokens for call in self.calls)
         total_output_tokens = sum(call.output_tokens for call in self.calls)
         
-        print("\n" + "="*80)
-        print("           EXPLAINABLE TREE RAG — COST & TIME TRACKER REPORT")
-        print("="*80)
-        print(f"  Total LLM Calls       : {total_calls}")
-        print(f"  Total Input Tokens    : {total_input_tokens:,}")
-        print(f"  Total Output Tokens   : {total_output_tokens:,}")
-        print(f"  Total Cost            : ${total_cost:.6f} USD")
-        print(f"  Total LLM Time (sum)  : {total_time:.3f} seconds")
-        print("\n  Detailed Breakdown:")
-        print("-" * 90)
-        
-        for call in self.calls:
-            print(
-                f"  • {call.step:28} | "
-                f"{call.model:25} | "
-                f"In: {call.input_tokens:6,} | "
-                f"Out: {call.output_tokens:6,} | "
-                f"${call.cost_usd:.6f} | "
-                f"{call.duration_seconds:.3f}s"
-            )
-        
-        print("="*80)
+        # ── Removed raw print block — now displayed via pretty_query COST SUMMARY ──
+        # print("\n" + "="*80)
+        # print("           EXPLAINABLE TREE RAG — COST & TIME TRACKER REPORT")
+        # print("="*80)
+        # print(f"  Total LLM Calls       : {total_calls}")
+        # print(f"  Total Input Tokens    : {total_input_tokens:,}")
+        # print(f"  Total Output Tokens   : {total_output_tokens:,}")
+        # print(f"  Total Cost            : ${total_cost:.6f} USD")
+        # print(f"  Total LLM Time (sum)  : {total_time:.3f} seconds")
+        # print("\n  Detailed Breakdown:")
+        # print("-" * 90)
+        # for call in self.calls:
+        #     print(
+        #         f"  • {call.step:28} | "
+        #         f"{call.model:25} | "
+        #         f"In: {call.input_tokens:6,} | "
+        #         f"Out: {call.output_tokens:6,} | "
+        #         f"${call.cost_usd:.6f} | "
+        #         f"{call.duration_seconds:.3f}s"
+        #     )
+        # print("="*80)
         
         # Prepare structured report
         report = {

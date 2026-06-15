@@ -4,6 +4,9 @@ import os
 from pathlib import Path
 from typing import List
 import json
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", message=".*create_react_agent has been moved.*")
 
 # PATH SETUP MUST COME FIRST
 current_file = Path(__file__).resolve()
@@ -34,7 +37,6 @@ _SPD_INDEX_PATH = project_root / "indexing_for_spd/ingestion_results/local_level
 _SUMMARY_CACHE = project_root / "agent" / "tool_summaries_cache.json"
 
 
-
 def _get_tool_summaries() -> dict:
     if _SUMMARY_CACHE.exists():
         return json.load(open(_SUMMARY_CACHE))
@@ -49,7 +51,7 @@ def _get_tool_summaries() -> dict:
 
     def condense(raw_summary: str, doc_name: str) -> str:
         groq_key = os.getenv("GROQ_API_KEY")
-        llm = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0, groq_api_key=groq_key)  # CHANGED: "MODEL" → actual model name
+        llm = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0, groq_api_key=groq_key)
         prompt = f"""You are summarizing a healthcare benefits document called '{doc_name}' for tool selection purposes.
 
     Below is the full document summary:
@@ -77,20 +79,54 @@ def _get_tool_summaries() -> dict:
 
 _SUMMARIES = _get_tool_summaries()
 
-# 3. Replace your existing SYSTEM_PROMPT with this
-SYSTEM_PROMPT = f"""You are a helpful general assistant with access to two healthcare benefit document search tools.
+# SYSTEM_PROMPT = f"""You are a precise healthcare benefits routing assistant.
 
-SBC document covers: {_SUMMARIES['sbc']}
+# You have access to two specialized search tools.
 
-SPD document covers: {_SUMMARIES['spd']}
+# **SBC Document Summary:**
+# {_SUMMARIES['sbc']}
 
-RULES:
-- If the question relates to the SBC document → use search_sbc only.
-- If the question relates to the SPD document → use search_spd only.
-- If it relates to both → call both.
-- If the question is unrelated to either document → answer from your own knowledge, do not call any tool.
-- Never fabricate benefit information — only use what the tools return for benefit questions.
-- Return ONLY the plain answer text. No markdown headers, no bullet formatting unless the question specifically asks for a list.
+# **SPD Document Summary:**
+# {_SUMMARIES['spd']}
+
+# === QUICK KEYWORD GUIDELINES ===
+# SBC (use search_sbc): deductible, deductibles, copay, copays, coinsurance, 
+# out-of-pocket, cost sharing, what is covered, benefit amount, coverage summary.
+
+# SPD (use search_spd): eligibility, enrollment, termination, exclusion, appeal, 
+# cobra, hipaa, definition, administration, legal, plan rules.
+
+# Rules:
+# - Prefer using **only one tool** when possible.
+# - Use keywords first for fast decision.
+# - If unclear, use the document summaries to decide.
+# - If the question is not related to these documents, answer normally without tools.
+
+# Answer the user's question helpfully using the tools when needed.
+# After receiving tool results, combine them cleanly if both were used and give the final answer.
+# """
+# # =====================================================================
+
+
+SYSTEM_PROMPT = f"""You are a helpful healthcare benefits assistant.
+
+You have two tools available:
+
+1. search_sbc - For questions about deductibles, copays, coinsurance, out-of-pocket maximums, cost sharing, what is covered, benefit amounts.
+
+2. search_spd - For questions about eligibility, exclusions, plan rules, appeals, COBRA, definitions, administration.
+
+**SBC Document Summary:**
+{_SUMMARIES['sbc']}
+
+**SPD Document Summary:**
+{_SUMMARIES['spd']}
+
+Instructions:
+- Use the most relevant tool based on the question.
+- Prefer using only ONE tool when possible.
+- If the question is not related to these documents, answer without using any tool.
+- Be direct and helpful.
 """
 
 # ── Color/Style constants ─────────────────────────────────────
@@ -136,39 +172,35 @@ def _get_tools_called(messages) -> List[str]:
     return tools_called
 
 
+# ==================== CHANGED: Improved _display_agent_step to reduce duplication ====================
 def _display_agent_step(question: str, tools_called: List[str], answer: str):
     print()
     _print_hr("═", CYAN)
-    print(f"{BOLD}{CYAN}  AGENT QUERY RESULT{RESET}")
+    print(f"{BOLD}{CYAN} AGENT QUERY RESULT{RESET}")
     _print_hr("═", CYAN)
     print()
 
-    print(f"{BOLD}  Step 1  ◈ Relevance Check{RESET}")
-
     if tools_called:
+        print(f"{BOLD} Step 1 ◈ Relevance Check{RESET}")
         tool_labels = {
             "search_sbc": "SBC (Summary of Benefits and Coverage)",
             "search_spd": "SPD (Summary Plan Description)"
         }
         tool_names = " + ".join(tool_labels.get(t, t) for t in tools_called)
-        print(f"  {GREEN}✓ Related to benefit document → {tool_names}{RESET}")
+        print(f" {GREEN}✓ Related to benefit document → {tool_names}{RESET}")
         print()
 
-        for tool_name in tools_called:
-            doc = "SBC Document" if tool_name == "search_sbc" else "SPD Document"
-            print(f"{BOLD}  Step 2  ◆ Calling Tool → {MAGENTA}@{tool_name}{RESET}  [{DIM}{doc}{RESET}]")
-        print()
-
-        # ADDED: show answer block for tool-based responses too
+        # Only show final ANSWER (tools already printed their own Step 1/2 + RAG output)
         _print_hr("─", GREEN)
-        print(f"{BOLD}{GREEN}  ANSWER{RESET}")
+        print(f"{BOLD}{GREEN} ANSWER{RESET}")
         _print_hr("─", GREEN)
+        
         words = answer.split()
-        line = "  "
+        line = " "
         for word in words:
             if len(line) + len(word) + 1 > 83:
                 print(line)
-                line = "  " + word + " "
+                line = " " + word + " "
             else:
                 line += word + " "
         if line.strip():
@@ -178,19 +210,21 @@ def _display_agent_step(question: str, tools_called: List[str], answer: str):
         print()
 
     else:
-        print(f"  {YELLOW}✗ Not related to any benefit document → General knowledge question{RESET}")
+        # Non-benefit question
+        print(f" {YELLOW}✗ Not related to any benefit document → General knowledge question{RESET}")
         print()
-        print(f"{BOLD}  Step 2  ◆ General Answer{RESET}")
+        print(f"{BOLD} Step 2 ◆ General Answer{RESET}")
         print()
         _print_hr("─", YELLOW)
-        print(f"{BOLD}{YELLOW}  ANSWER{RESET}")
+        print(f"{BOLD}{YELLOW} ANSWER{RESET}")
         _print_hr("─", YELLOW)
+        
         words = answer.split()
-        line = "  "
+        line = " "
         for word in words:
             if len(line) + len(word) + 1 > 83:
                 print(line)
-                line = "  " + word + " "
+                line = " " + word + " "
             else:
                 line += word + " "
         if line.strip():
@@ -198,6 +232,7 @@ def _display_agent_step(question: str, tools_called: List[str], answer: str):
         print()
         _print_hr("═", CYAN)
         print()
+# =====================================================================
 
 
 def get_dynamic_model(provider: str):
@@ -235,8 +270,8 @@ def run_agent_with_config(query: str, provider: str) -> str:
     tools_called = _get_tools_called(all_messages)
     answer = _extract_text(all_messages[-1].content)
     _display_agent_step(query, tools_called, answer)
-    # REMOVED: debug line
     return answer
+
 
 if __name__ == "__main__":
     print(f"{BOLD}  Voice Agent with Dual RAG Tools{RESET}")
@@ -308,7 +343,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"{RED}Error: {e}{RESET}")
             
-      ]
+      
         print("\n[1] Text Mode\n[2] Voice Mode\n[q] Quit")
         next_mode = input("Select Mode for next turn (Leave blank to keep current): ").strip()
         if next_mode in ["1", "2"]:
