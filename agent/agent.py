@@ -226,21 +226,6 @@ def get_dynamic_model(provider: str):
         raise ValueError(f"Unsupported provider: '{provider}'")
 
 
-# def run_agent_with_config(query: str, provider: str) -> str:
-#     llm = get_dynamic_model(provider=provider)
-#     agent = create_react_agent(llm, tools=tools, prompt=SYSTEM_PROMPT)
-#     inputs = {"messages": [HumanMessage(content=query)]}
-#     response = agent.invoke(inputs)
-#     all_messages = response["messages"]
-#     tools_called = _get_tools_called(all_messages)
-
-#     # REVERTED: all_messages[-1] was giving polished answer before
-#     answer = _extract_text(all_messages[-1].content)
-
-#     _display_agent_step(query, tools_called, answer)
-#     print(f"\n[DEBUG] Speaking: {repr(answer)}\n")  # confirm what gets spoken
-#     return answer
-
 def run_agent_with_config(query: str, provider: str) -> str:
     llm = get_dynamic_model(provider=provider)
     agent = create_react_agent(llm, tools=tools, prompt=SYSTEM_PROMPT)
@@ -323,10 +308,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"{RED}Error: {e}{RESET}")
             
-        # ── SAFETY POSITION ADJUSTMENT ────────────────────────────────
-        # Move the mode picker menu outside the try block so that even if an 
-        # API or model execution fails, the script safely stops and asks you 
-        # what to do next instead of spinning into an infinite record loop.
+      ]
         print("\n[1] Text Mode\n[2] Voice Mode\n[q] Quit")
         next_mode = input("Select Mode for next turn (Leave blank to keep current): ").strip()
         if next_mode in ["1", "2"]:
