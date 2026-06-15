@@ -1,0 +1,51 @@
+# =========================
+# Environment and IDE
+# =========================
+.env
+.vscode/
+
+# =========================
+# Python cache and bytecode
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# =========================
+# Virtual environments
+# =========================
+venv/
+env/
+
+# =========================
+# Logs and process files
+# =========================
+*.log
+process.log
+pipeline_execution.log
+Indexing_log.txt
+logs/
+
+# =========================
+# Chat history
+# =========================
+chat_history/
+
+# =========================
+# Ingestion Results Management
+# =========================
+# Ignore everything under ingestion_results
+ingestion_results/
+
+# Allow Git to look inside the SPD indexing_results folder
+!ingestion_results/local_level_health_ppo_health_plan_spd (1)/
+!ingestion_results/local_level_health_ppo_health_plan_spd (1)/indexing_results/
+
+# Keep only the master_indexing.json file
+!ingestion_results/local_level_health_ppo_health_plan_spd (1)/indexing_results/master_indexing.json
+
+# =========================
+# Debug and Temporary files
+# =========================
+/data/
