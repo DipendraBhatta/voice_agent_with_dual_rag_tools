@@ -197,7 +197,6 @@ VOICE AGENT WITH DUAL RAG TOOLS/
 ├── .env                               # API keys — see template below (not committed)
 ├── .gitignore
 ├── piper                              # Piper TTS binary (Linux x86_64)
-├── piper_linux_x86_64.tar.gz          # Piper archive
 ├── process.log                        # Query trace log
 ├── README.md
 └── requirements.txt
@@ -297,15 +296,13 @@ Copy the template and fill in your API keys:
 ```bash
 cp .env.template .env
 ```
+edit .env
+GROQ_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GROQ_LLM_MODEL=llama-3.3-70b-versatile
 
-Edit `.env`:
-
-```env
-# Groq — LLM inference
-GROQ_API_KEY=your_groq_api_key_here
-
-# OpenRouter — evaluation LLM (Claude 3 Haiku)
-OPENROUTER_API_KEY=your_openrouter_api_key_here
+# ── Gemini ──────────────────────────────────────────────────────────
+GEMINI_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+MODEL=gemini-2.5-flash
 ```
 
 
