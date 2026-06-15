@@ -37,13 +37,12 @@ chat_history/
 # =========================
 # Ignore everything under ingestion_results
 ingestion_results/
-
 # Allow Git to look inside the SPD indexing_results folder
-!ingestion_results/local_level_health_ppo_health_plan_spd (1)/
-!ingestion_results/local_level_health_ppo_health_plan_spd (1)/indexing_results/
+!ingestion_results/local_level_health_ppo_health_plan_spd\ (1)/
+!ingestion_results/local_level_health_ppo_health_plan_spd\ (1)/indexing_results/
 
 # Keep only the master_indexing.json file
-!ingestion_results/local_level_health_ppo_health_plan_spd (1)/indexing_results/master_indexing.json
+!ingestion_results/local_level_health_ppo_health_plan_spd\ (1)/indexing_results/master_indexing.json
 
 # =========================
 # Debug and Temporary files
